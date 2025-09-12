@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Document</title>
 </head>
 <body>
-    <h1>This is a heading!</h1>
+    <h1 th:text="'Hello' + ${name}">This is a heading!</h1>
 </body>
 </html>
