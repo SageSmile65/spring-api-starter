@@ -1,12 +1,12 @@
 package com.codewithmosh.store.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
+@Getter
+@Setter
 @AllArgsConstructor
-@Getter //So spring can get data from these fields and create JSON
 public class UserDto {
-    private long id;
+    private Long id;
     private String name;
     private String email;
 }
