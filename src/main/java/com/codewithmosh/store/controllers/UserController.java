@@ -1,5 +1,6 @@
 package com.codewithmosh.store.controllers;
 
+import com.codewithmosh.store.dtos.UserDto;
 import com.codewithmosh.store.entities.User;
 import com.codewithmosh.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -17,8 +18,10 @@ public class UserController {
     private final UserRepository userRepository;
 
     @GetMapping
-    public Iterable<User> getUser() {
-        var userList = userRepository.findAll();
+    public Iterable<UserDto> getUser() {
+        var userList = userRepository.findAll().stream()
+                .map(user -> new UserDto(user.getId(),user.getName(),user.getEmail()))
+                .toList();
         return userList;
     }
 
