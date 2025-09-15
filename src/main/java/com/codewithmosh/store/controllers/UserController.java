@@ -2,6 +2,7 @@ package com.codewithmosh.store.controllers;
 
 import com.codewithmosh.store.Mapper.UserMapper;
 import com.codewithmosh.store.dtos.RegisterUserRequest;
+import com.codewithmosh.store.dtos.UpdateUserRequest;
 import com.codewithmosh.store.dtos.UserDto;
 import com.codewithmosh.store.entities.User;
 import com.codewithmosh.store.repositories.UserRepository;
@@ -55,5 +56,29 @@ public class UserController {
         var userDto = userMapper.userToUserDto(user);
         var uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto> request(@PathVariable(name = "id") long id,@RequestBody UpdateUserRequest request) {
+        var user  = userRepository.findById(id).orElse(null);
+        if(user == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        userMapper.updateUser(request,user);
+        userRepository.save(user);
+
+        //Returning userDto respEntity to display the JSON body
+        return ResponseEntity.ok(userMapper.userToUserDto(user));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<UserDto> deleteUser(@PathVariable(name = "id") long id) {
+        var user = userRepository.findById(id).orElse(null);
+        if(user == null) {
+            return ResponseEntity.notFound().build();
+        }
+        userRepository.delete(user);
+        return ResponseEntity.ok(userMapper.userToUserDto(user));
     }
 }
