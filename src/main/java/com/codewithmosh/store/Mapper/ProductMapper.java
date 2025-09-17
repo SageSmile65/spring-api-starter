@@ -11,6 +11,6 @@ public interface ProductMapper {
     @Mapping(source = "category.id",target = "categoryId")
     ProductDto toProductDto(Product product);
 
-    //Takes produtctDto json and converts it to product
+    //Takes productDto json and converts it to product
     Product toEntity(ProductDto productDto);
 }
