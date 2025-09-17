@@ -7,6 +7,7 @@ import com.codewithmosh.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -41,5 +42,19 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(productDto);
+    }
+
+    @PostMapping
+    public ResponseEntity<ProductDto> createProduct(@RequestBody ProductDto productDto,
+                                                    UriComponentsBuilder uriBuilder){
+
+        if(productDto == null){
+            return ResponseEntity.badRequest().build();
+        }
+        var product = productMapper.toEntity(productDto);
+        productRepository.save(product);
+        var uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
+
+        return  ResponseEntity.created(uri).body(productDto);
     }
 }

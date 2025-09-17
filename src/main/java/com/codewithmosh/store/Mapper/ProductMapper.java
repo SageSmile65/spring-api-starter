@@ -10,4 +10,7 @@ public interface ProductMapper {
     //Mapping category.id to categoryId because there is not catId field in product entity
     @Mapping(source = "category.id",target = "categoryId")
     ProductDto toProductDto(Product product);
+
+    //Takes produtctDto json and converts it to product
+    Product toEntity(ProductDto productDto);
 }
