@@ -6,6 +6,7 @@ import com.codewithmosh.store.entities.Product;
 import com.codewithmosh.store.repositories.CategoryRepository;
 import com.codewithmosh.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -65,5 +66,32 @@ public class ProductController {
         var uri = uriBuilder.path("/products/{id}").buildAndExpand(product.getId()).toUri();
 
         return  ResponseEntity.created(uri).body(productDto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto){
+        Product product = productRepository.findById(id).orElse(null);
+        if(product == null){
+            return ResponseEntity.notFound().build();
+        }
+        productDto.setId(id);
+        productMapper.updateProduct(productDto,product);
+        var category = categoryRepository.findById(productDto.getCategoryId()).orElse(null);
+        if(category == null){
+            return ResponseEntity.badRequest().build();
+        }
+        product.setCategory(category);
+        productRepository.save(product);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id){
+        var product = productRepository.findById(id).orElse(null);
+        if(product == null){
+            return ResponseEntity.notFound().build();
+        }
+        productRepository.delete(product);
+        return  ResponseEntity.ok().build();
     }
 }
