@@ -5,18 +5,15 @@ import com.codewithmosh.store.dtos.ChangePasswordRequest;
 import com.codewithmosh.store.dtos.RegisterUserRequest;
 import com.codewithmosh.store.dtos.UpdateUserRequest;
 import com.codewithmosh.store.dtos.UserDto;
-import com.codewithmosh.store.entities.User;
 import com.codewithmosh.store.repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,9 +51,15 @@ public class UserController {
 
     //Handling post requests i.e. receiving data from frontend
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody RegisterUserRequest request,
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterUserRequest request,
                                               UriComponentsBuilder uriBuilder
     ) {
+        //Creating a business rule to allow only unique emails
+        if(userRepository.existsByEmail(request.getEmail())){ //creating and using a custom query
+            return ResponseEntity.badRequest().body(
+                    Map.of(request.getEmail(),"Email is already registerd")
+            );
+        }
         var user = userMapper.toEntity(request);
         userRepository.save(user);
         var userDto = userMapper.userToUserDto(user);
