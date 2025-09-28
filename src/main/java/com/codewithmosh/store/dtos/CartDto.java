@@ -13,9 +13,7 @@ import java.util.*;
 @Data
 @AllArgsConstructor
 public class CartDto implements Serializable {
-    private Long id;
-    LocalDate dateCreated;
+    private UUID id;
     private List<CartItemDto> items = new ArrayList<>();
     private BigDecimal totalPrice = BigDecimal.ZERO;
-
 }
