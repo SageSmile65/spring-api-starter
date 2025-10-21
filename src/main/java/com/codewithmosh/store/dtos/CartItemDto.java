@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.mapstruct.Mapping;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
@@ -14,8 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDto implements Serializable {
-    private Long id;
-    private Long productId;
-    private UUID cartId;
-    private Integer quantity;
+    private CartProductDto product;
+    private int quantity;
+    private BigDecimal totalPrice;
 }

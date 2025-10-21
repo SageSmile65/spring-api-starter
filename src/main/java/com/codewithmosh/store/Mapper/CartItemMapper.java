@@ -13,7 +13,7 @@ public interface CartItemMapper {
 
     CartItem toEntity(AddItemToCartRequest request);
 
-    @Mapping(source = "cart.id",target = "cartId")
-    @Mapping(source = "product.id",target = "productId")
+    @Mapping(source = "product",target="product")
+    @Mapping(target = "totalPrice", expression = "java(cartItem.getTotalPrice())")
     CartItemDto toCartItemDto(CartItem cartItem);
 }
