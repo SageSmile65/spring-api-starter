@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface CartRepository extends CrudRepository<Cart, UUID> {
+    Object getCartsById(UUID id);
 }

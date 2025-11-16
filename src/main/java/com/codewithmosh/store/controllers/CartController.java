@@ -5,6 +5,7 @@ import com.codewithmosh.store.Mapper.CartMapper;
 import com.codewithmosh.store.dtos.AddItemToCartRequest;
 import com.codewithmosh.store.dtos.CartDto;
 import com.codewithmosh.store.dtos.CartItemDto;
+import com.codewithmosh.store.dtos.UpdateCartItemRequest;
 import com.codewithmosh.store.entities.Cart;
 import com.codewithmosh.store.entities.CartItem;
 import com.codewithmosh.store.repositories.CartRepository;
@@ -61,5 +62,37 @@ public class CartController {
 
         var uri = uriComponentsBuilder.path("/carts/{id}").buildAndExpand(cartItem.getId()).toUri();
         return ResponseEntity.created(uri).body(cartItemMapper.toCartItemDto(cartItem));
+    }
+    @GetMapping("/{cartId}")
+    public ResponseEntity<CartDto> getCart(@PathVariable UUID cartId){
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if(cart == null){
+            return ResponseEntity.notFound().build();
+        }
+        return  ResponseEntity.ok(cartMapper.toCartDto(cart));
+    }
+
+    @PutMapping("/{cartId}/cart_items/{itemId}")
+    public ResponseEntity<CartItemDto> updateCart(@PathVariable UUID cartId,
+                                                  @PathVariable Long itemId,
+                                                  @RequestBody UpdateCartItemRequest request){
+        var cart = cartRepository.findById(cartId).orElse(null);
+        if(cart == null){
+            return ResponseEntity.notFound().build();
+        }
+        CartItem cartItem = null;
+        for(CartItem item : cart.getCartItems()){
+            if(item.getId().equals(itemId)){
+                cartItem = item;
+                break;
+            }
+        }
+        if(cartItem == null){
+            return ResponseEntity.notFound().build();
+        }
+        cartItem.setQuantity(request.getQuantity());
+        cartRepository.save(cart);
+
+        return  ResponseEntity.ok(cartItemMapper.toCartItemDto(cartItem));
     }
 }

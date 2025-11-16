@@ -1,5 +1,6 @@
 package com.codewithmosh.store.dtos;
 
+import com.codewithmosh.store.entities.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,6 @@ import java.util.*;
 @AllArgsConstructor
 public class CartDto implements Serializable {
     private UUID id;
-    private List<CartItemDto> items = new ArrayList<>();
+    private Set<CartItemDto> items = new  LinkedHashSet<>();
     private BigDecimal totalPrice = BigDecimal.ZERO;
 }
