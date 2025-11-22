@@ -15,6 +15,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDto implements Serializable {
+    private Long id;
     private CartProductDto product;
     private int quantity;
     private BigDecimal totalPrice;

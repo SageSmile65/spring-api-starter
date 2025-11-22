@@ -25,7 +25,7 @@ public class CartItem {
     private Product product;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private int quantity;
 
     public BigDecimal getTotalPrice() {
         return product.getPrice().multiply(BigDecimal.valueOf(quantity));

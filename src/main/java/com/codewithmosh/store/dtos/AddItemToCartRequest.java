@@ -8,5 +8,5 @@ public class AddItemToCartRequest {
 
     @NotNull
     private Long productId;
-    private Integer quantity;
+    private int quantity;
 }
