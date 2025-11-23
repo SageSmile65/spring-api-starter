@@ -1,4 +1,4 @@
-package com.codewithmosh.store;
+package com.codewithmosh.store.services;
 
 import com.codewithmosh.store.Mapper.CartItemMapper;
 import com.codewithmosh.store.Mapper.CartMapper;

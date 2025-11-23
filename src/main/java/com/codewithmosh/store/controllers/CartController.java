@@ -1,6 +1,6 @@
 package com.codewithmosh.store.controllers;
 
-import com.codewithmosh.store.CartService;
+import com.codewithmosh.store.services.CartService;
 import com.codewithmosh.store.dtos.AddItemToCartRequest;
 import com.codewithmosh.store.dtos.CartDto;
 import com.codewithmosh.store.dtos.CartItemDto;
