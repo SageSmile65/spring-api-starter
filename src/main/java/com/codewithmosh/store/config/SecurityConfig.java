@@ -1,6 +1,6 @@
 package com.codewithmosh.store.config;
 
-import com.codewithmosh.store.services.UserDetailsService;
+import com.codewithmosh.store.services.UserService;
 import com.codewithmosh.store.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
