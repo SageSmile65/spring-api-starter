@@ -2,6 +2,7 @@ package com.codewithmosh.store.config;
 
 import com.codewithmosh.store.services.UserService;
 import com.codewithmosh.store.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Configuration
 @EnableWebSecurity
+@AllArgsConstructor
 public class SecurityConfig {
     private UserService userDetailsService;
     @Bean
