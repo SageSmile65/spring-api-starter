@@ -1,7 +1,6 @@
 package com.codewithmosh.store.config;
 
 import com.codewithmosh.store.services.UserService;
-import com.codewithmosh.store.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.bind.annotation.PostMapping;
 
 @Configuration
 @EnableWebSecurity
