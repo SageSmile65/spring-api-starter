@@ -1,7 +1,9 @@
 package com.codewithmosh.store.controllers;
 
+import com.codewithmosh.store.dtos.JwtResponse;
 import com.codewithmosh.store.dtos.LoginUserRequest;
 import com.codewithmosh.store.repositories.UserRepository;
+import com.codewithmosh.store.services.JwtService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -22,13 +24,16 @@ public class AuthController {
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
     private AuthenticationManager authenticationManager;
+    private JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUserRequest request) {
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginUserRequest request) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        return ResponseEntity.ok().build();
+        String token =  jwtService.generateToken(request.getEmail());
+
+        return ResponseEntity.ok(new  JwtResponse(token));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
