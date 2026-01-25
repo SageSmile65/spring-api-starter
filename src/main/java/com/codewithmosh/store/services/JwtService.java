@@ -35,17 +35,18 @@ public class JwtService {
     }
 
     public boolean validateToken(String token) throws JwtException {
-        var claims = Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.getExpiration().after(new Date());
-    }
+        try{
+            var claims = Jwts.parser()
+                    .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return claims.getExpiration().after(new Date());
 
-    @ExceptionHandler(JwtException.class)
-    public boolean handleJwtException(JwtException e) {
-        return false;
+        }
+        catch (JwtException e){
+            return false;
+        }
     }
 
 }
