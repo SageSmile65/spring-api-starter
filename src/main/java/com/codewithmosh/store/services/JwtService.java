@@ -40,12 +40,12 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-        return claims.getExpiration().before(new Date());
+        return claims.getExpiration().after(new Date());
     }
 
     @ExceptionHandler(JwtException.class)
-    public ResponseEntity<String> handleJwtException(JwtException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public boolean handleJwtException(JwtException e) {
+        return false;
     }
 
 }
