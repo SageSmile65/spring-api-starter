@@ -6,6 +6,8 @@ import com.codewithmosh.store.dtos.LoginUserRequest;
 import com.codewithmosh.store.dtos.UserDto;
 import com.codewithmosh.store.repositories.UserRepository;
 import com.codewithmosh.store.services.JwtService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -32,14 +34,24 @@ public class AuthController {
     private JwtService jwtService;
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> login(@RequestBody LoginUserRequest request) {
+    public ResponseEntity<JwtResponse> login(@RequestBody LoginUserRequest request, HttpServletResponse response) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-        String token =  jwtService.generateToken(user);
+        String accessToken =  jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+        var cookie = new Cookie("RefreshToken", refreshToken);
+
+        cookie.isHttpOnly();
+        cookie.setSecure(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(64800);
+        response.addCookie(cookie);
+
+
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
