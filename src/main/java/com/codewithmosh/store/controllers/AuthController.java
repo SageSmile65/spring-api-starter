@@ -33,7 +33,7 @@ public class AuthController {
 
         String token =  jwtService.generateToken(request.getEmail());
 
-        return ResponseEntity.ok(new  JwtResponse(token));
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
