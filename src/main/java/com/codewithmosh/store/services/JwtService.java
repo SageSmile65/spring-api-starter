@@ -56,7 +56,7 @@ public class JwtService {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-    public String getEmailFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         return getClaims(token).getSubject();
     }
 }
