@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.Map;
 
 @RestController
@@ -35,7 +36,8 @@ public class AuthController {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
 
-        String token =  jwtService.generateToken(request.getEmail());
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        String token =  jwtService.generateToken(user);
 
         return ResponseEntity.ok(new JwtResponse(token));
     }
@@ -54,9 +56,9 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<UserDto> getUser(){
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var email = (String)authentication.getPrincipal();
+        var id = Long.parseLong((String)authentication.getPrincipal());
 
-        var user =  userRepository.findByEmail(email).orElse(null);
+        var user =  userRepository.findById(id).orElse(null);
         if(user == null){
             return ResponseEntity.notFound().build();
         }
