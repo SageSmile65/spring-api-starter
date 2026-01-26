@@ -1,5 +1,6 @@
 package com.codewithmosh.store.services;
 
+import com.codewithmosh.store.config.JwtConfig;
 import com.codewithmosh.store.dtos.JwtResponse;
 import com.codewithmosh.store.entities.User;
 import com.codewithmosh.store.repositories.UserRepository;
@@ -20,20 +21,19 @@ import java.security.Key;
 import java.util.Date;
 
 @Service
+@AllArgsConstructor
 public class JwtService {
 
-
-    @Value("${spring.jwt.secret}")
-    private String secret;
+    private final JwtConfig jwtConfig;
 
 
     public String generateAccessToken(User user) {
-        final long tokenExpiration = 300; //5 min
+        final long tokenExpiration = jwtConfig.getAccessTokenExpiration(); //5 min
 
         return generateToken(user, tokenExpiration);
     }
     public String generateRefreshToken(User user) {
-        final long tokenExpiration = 604800; //7 days
+        final long tokenExpiration = jwtConfig.getRefreshTokenExpiration(); //7 days
 
         return generateToken(user, tokenExpiration);
     }
@@ -43,7 +43,7 @@ public class JwtService {
                 .subject(String.valueOf(user.getId()))
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
                 .claims().add("Username", user.getName()).add("Email", user.getEmail())
                 .and().compact();
     }
@@ -61,7 +61,7 @@ public class JwtService {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
