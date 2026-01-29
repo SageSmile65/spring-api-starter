@@ -1,5 +1,6 @@
 package com.codewithmosh.store.config;
 
+import com.codewithmosh.store.entities.Role;
 import com.codewithmosh.store.filters.JwtAuthenticationFilter;
 import com.codewithmosh.store.filters.LoggingFilter;
 import com.codewithmosh.store.services.UserService;
@@ -58,6 +59,7 @@ public class SecurityConfig {
                         .requestMatchers("/carts/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/users").permitAll()
+                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.toString())
                         .requestMatchers(HttpMethod.POST,"/auth/refresh").permitAll()
                         .anyRequest().authenticated()
                         )
