@@ -44,7 +44,7 @@ public class JwtService {
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
                 .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
-                .claims().add("Username", user.getName()).add("Email", user.getEmail())
+                .claims().add("Username", user.getName()).add("Email", user.getEmail()).add("Role",user.getRole().toString())
                 .and().compact();
     }
 
