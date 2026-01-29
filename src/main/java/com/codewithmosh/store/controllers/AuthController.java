@@ -56,15 +56,17 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Void>  handleBadCredentialsException(BadCredentialsException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtResponse> refresh(
+            @CookieValue(value = "refreshToken") String refreshToken
+            ){
+        if(!jwtService.validateToken(refreshToken)){
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        var userId = jwtService.getUserIdFromToken(refreshToken);
+        var user = userRepository.findById(Long.parseLong(userId)).orElseThrow();
+        var accessToken = jwtService.generateAccessToken(user);
 
-    @PostMapping("/validate")
-    public boolean validateToken(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        return jwtService.validateToken(token);
     }
 
     @GetMapping("/me")
@@ -77,5 +79,9 @@ public class AuthController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(userMapper.userToUserDto(user));
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Void>  handleBadCredentialsException(BadCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 }
