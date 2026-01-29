@@ -67,6 +67,7 @@ public class AuthController {
         var user = userRepository.findById(Long.parseLong(userId)).orElseThrow();
         var accessToken = jwtService.generateAccessToken(user);
 
+        return ResponseEntity.ok(new JwtResponse(accessToken));
     }
 
     @GetMapping("/me")
