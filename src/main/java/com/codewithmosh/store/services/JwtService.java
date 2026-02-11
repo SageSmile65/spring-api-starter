@@ -1,23 +1,14 @@
 package com.codewithmosh.store.services;
 
 import com.codewithmosh.store.config.JwtConfig;
-import com.codewithmosh.store.dtos.JwtResponse;
 import com.codewithmosh.store.entities.User;
-import com.codewithmosh.store.repositories.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.security.Key;
 import java.util.Date;
 
 @Service
@@ -68,5 +59,8 @@ public class JwtService {
     }
     public String getUserIdFromToken(String token) {
         return getClaims(token).getSubject();
+    }
+    public String getUserRoleFromToken(String token){
+        return getClaims(token).get("Role").toString();
     }
 }
