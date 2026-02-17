@@ -18,49 +18,42 @@ public class JwtService {
     private final JwtConfig jwtConfig;
 
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         final long tokenExpiration = jwtConfig.getAccessTokenExpiration(); //5 min
 
         return generateToken(user, tokenExpiration);
     }
-    public String generateRefreshToken(User user) {
+    public Jwt generateRefreshToken(User user) {
         final long tokenExpiration = jwtConfig.getRefreshTokenExpiration(); //7 days
 
         return generateToken(user, tokenExpiration);
     }
 
-    private String generateToken(User user, long tokenExpiration) {
-        return Jwts.builder()
+    private Jwt generateToken(User user, long tokenExpiration) {
+        var claims = Jwts.claims()
                 .subject(String.valueOf(user.getId()))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + tokenExpiration * 1000))
-                .signWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
-                .claims().add("Username", user.getName()).add("Email", user.getEmail()).add("Role",user.getRole().toString())
-                .and().compact();
-    }
+                .expiration(new Date(System.currentTimeMillis() + 1000*tokenExpiration))
+                .add("Username",user.getName()).add("Email",user.getEmail()).add("Role",user.getRole().toString())
+                .build();
 
-    public boolean validateToken(String token) throws JwtException {
+        return new Jwt(claims,jwtConfig.getSecret());
+    }
+    public Jwt parseToJwt(String token){
         try{
             var claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-
+            return new Jwt(claims,jwtConfig.getSecret());
         }
-        catch (JwtException e){
-            return false;
+        catch(Exception e){
+            return null;
         }
     }
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(jwtConfig.getSecret().getBytes()))
+                .verifyWith(jwtConfig.getSecret())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-    public String getUserIdFromToken(String token) {
-        return getClaims(token).getSubject();
-    }
-    public String getUserRoleFromToken(String token){
-        return getClaims(token).get("Role").toString();
     }
 }

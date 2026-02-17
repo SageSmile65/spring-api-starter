@@ -59,6 +59,12 @@ public class User {
     )
     private Set<Product> favoriteProducts = new HashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    @Builder.Default
+    private List<Order> orders = new ArrayList<>();
+
+
+
     public void addFavoriteProduct(Product product) {
         favoriteProducts.add(product);
     }
