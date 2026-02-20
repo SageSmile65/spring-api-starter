@@ -38,4 +38,23 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     @Builder.Default
     private Collection<OrderItem> orderItems = new HashSet<>();
+
+    public static Order createFromCart(Cart cart,User customer){
+        Order order = Order.builder()
+                .customer(customer)
+                .status(OrderStatus.PENDING)
+                .totalPrice(cart.getTotalPrice())
+                .createdAt(LocalDateTime.now())
+                .build();
+        cart.getCartItems().forEach(item -> {
+            var orderItem = new OrderItem();
+            orderItem.setProduct(item.getProduct());
+            orderItem.setQuantity(item.getQuantity());
+            orderItem.setUnitPrice(item.getProduct().getPrice());
+            orderItem.setTotalPrice(item.getTotalPrice());
+            order.orderItems.add(orderItem);
+            orderItem.setOrder(order);
+        });
+        return order;
+    }
 }
