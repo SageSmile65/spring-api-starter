@@ -59,7 +59,7 @@ public class User {
     )
     private Set<Product> favoriteProducts = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "customer")
     @Builder.Default
     private List<Order> orders = new ArrayList<>();
 

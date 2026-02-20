@@ -1,10 +1,10 @@
 package com.codewithmosh.store.controllers;
 
+import com.codewithmosh.store.dtos.*;
+import com.codewithmosh.store.entities.Cart;
+import com.codewithmosh.store.entities.Order;
+import com.codewithmosh.store.repositories.CartRepository;
 import com.codewithmosh.store.services.CartService;
-import com.codewithmosh.store.dtos.AddItemToCartRequest;
-import com.codewithmosh.store.dtos.CartDto;
-import com.codewithmosh.store.dtos.CartItemDto;
-import com.codewithmosh.store.dtos.UpdateCartItemRequest;
 import com.codewithmosh.store.exceptions.CartItemNotFoundException;
 import com.codewithmosh.store.exceptions.CartNotFoundException;
 import com.codewithmosh.store.exceptions.ProductNotFoundException;
@@ -24,6 +24,7 @@ import java.util.UUID;
 @Tag(name = "Carts")
 public class CartController {
     private final CartService cartService;
+    private final CartRepository cartRepository;
 
     @PostMapping
     public ResponseEntity<CartDto> createCart(UriComponentsBuilder uriComponentsBuilder) {

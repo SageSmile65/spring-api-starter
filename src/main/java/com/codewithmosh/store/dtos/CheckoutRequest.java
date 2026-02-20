@@ -3,11 +3,11 @@ package com.codewithmosh.store.dtos;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
-public class AddItemToCartRequest {
+public class CheckoutRequest {
 
     @NotNull
-    private Long productId;
-    private int quantity;
-
+    private UUID cart_id;
 }
