@@ -1,5 +1,13 @@
 package com.codewithmosh.store.exceptions;
 
-public class CartNotFoundException extends RuntimeException {
+import lombok.NoArgsConstructor;
 
+
+public class CartNotFoundException extends RuntimeException {
+    public CartNotFoundException(String message) {
+        super(message);
+    }
+    public CartNotFoundException(){
+
+    };
 }
