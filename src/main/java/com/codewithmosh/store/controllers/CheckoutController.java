@@ -12,6 +12,7 @@ import com.codewithmosh.store.repositories.CartRepository;
 import com.codewithmosh.store.services.AuthService;
 import com.codewithmosh.store.services.CartService;
 import com.codewithmosh.store.services.CheckoutService;
+import com.stripe.exception.StripeException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class CheckoutController{
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public ResponseEntity<?> checkout(@Valid @RequestBody CheckoutRequest request) {
+    public ResponseEntity<?> checkout(@Valid @RequestBody CheckoutRequest request) throws StripeException {
         var cartId = request.getCart_id();
         if(cartId == null){
             return ResponseEntity.badRequest().body("Cart id is null");
