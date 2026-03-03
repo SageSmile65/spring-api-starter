@@ -1,4 +1,4 @@
 package com.codewithmosh.store.exceptions;
 
-public class PaymentException {
+public class PaymentException extends RuntimeException {
 }

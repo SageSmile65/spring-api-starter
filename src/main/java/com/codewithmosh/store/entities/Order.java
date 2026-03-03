@@ -35,7 +35,7 @@ public class Order {
     @JoinColumn(name = "customer_id")
     private User customer;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
     @Builder.Default
     private Collection<OrderItem> orderItems = new HashSet<>();
 
