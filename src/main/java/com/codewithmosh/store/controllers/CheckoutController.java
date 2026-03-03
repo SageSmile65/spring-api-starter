@@ -8,6 +8,7 @@ import com.codewithmosh.store.entities.OrderItem;
 import com.codewithmosh.store.entities.OrderStatus;
 import com.codewithmosh.store.exceptions.CartNotFoundException;
 import com.codewithmosh.store.exceptions.EmptyCartException;
+import com.codewithmosh.store.exceptions.PaymentException;
 import com.codewithmosh.store.repositories.CartRepository;
 import com.codewithmosh.store.services.AuthService;
 import com.codewithmosh.store.services.CartService;
@@ -34,13 +35,18 @@ public class CheckoutController{
     private final CheckoutService checkoutService;
 
     @PostMapping
-    public ResponseEntity<?> checkout(@Valid @RequestBody CheckoutRequest request) throws StripeException {
+    public ResponseEntity<?> checkout(@Valid @RequestBody CheckoutRequest request){
         var cartId = request.getCart_id();
         if(cartId == null){
             return ResponseEntity.badRequest().body("Cart id is null");
         }
         var response = checkoutService.checkout(request);
         return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<?> handlePaymentException(PaymentException ex){
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 
     @ExceptionHandler(CartNotFoundException.class)
