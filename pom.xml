@@ -151,10 +151,11 @@
             <groupId>org.thymeleaf.extras</groupId>
             <artifactId>thymeleaf-extras-springsecurity6</artifactId>
         </dependency>
+        <!-- Stripe -->
         <dependency>
             <groupId>com.stripe</groupId>
             <artifactId>stripe-java</artifactId>
-            <version>27.1.0</version>
+            <version>31.4.1</version>
         </dependency>
 
 

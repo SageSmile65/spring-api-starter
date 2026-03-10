@@ -15,6 +15,7 @@ import com.codewithmosh.store.services.CartService;
 import com.codewithmosh.store.services.CheckoutService;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
 import com.stripe.net.Webhook;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -37,8 +38,9 @@ import java.util.Map;
 public class CheckoutController{
 
     private final CheckoutService checkoutService;
+    private final OrderRepository orderRepository;
 
-    @Value("${stripe-webhookSecretyKey}")
+    @Value("{$stripe.webhookSecretKey}")
     private String webhookSecretKey;
 
     @PostMapping
@@ -58,10 +60,18 @@ public class CheckoutController{
         try {
             var event = Webhook.constructEvent(payload,signature,webhookSecretKey);
             System.out.println(event.getType());
-            var paymentObject = event.getDataObjectDeserializer().getObject();
+            var paymentObject = event.getDataObjectDeserializer().getObject().orElse(null);
+            System.out.println(event.getType());
             switch (event.getType()) {
                 case "payment_intent. succeeded" -> {
                     // Update order status (PAID)
+                    var paymentIntent = (PaymentIntent) paymentObject;
+                    if(paymentIntent != null){
+                        var orderId = paymentIntent. getMetadata().get("order_id");
+                        var order = orderRepository.findById(Long.valueOf(orderId)).orElseThrow();
+                        order.setStatus(OrderStatus.PAID);
+                        orderRepository.save(order);
+                    }
                 }
                 case "payment_intent. failed" -> {
                     // Update order status (FAILED);
