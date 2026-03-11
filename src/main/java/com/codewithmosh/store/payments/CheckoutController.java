@@ -1,7 +1,7 @@
 package com.codewithmosh.store.payments;
 
-import com.codewithmosh.store.controllers.OrderRepository;
-import com.codewithmosh.store.dtos.ErrorDto;
+import com.codewithmosh.store.orders.OrderRepository;
+import com.codewithmosh.store.common.ErrorDto;
 import com.codewithmosh.store.exceptions.CartNotFoundException;
 import com.codewithmosh.store.exceptions.EmptyCartException;
 import com.codewithmosh.store.exceptions.PaymentException;
